@@ -1,79 +1,195 @@
+def add_task(task_list, task_sequence):
+    """
+    Yeni bir görev ekler.
+    """
+    task_sequence += 1
+    task_name = input("Lütfen görev için bir isim girin: ")
+    task_list[task_sequence] = {'name': task_name, 'status': 'Tamamlanmadı'}
+    print(f"\nYeni görev '{task_name}' {task_sequence} ID ile listeye eklendi.\n")
+    return task_sequence
 
-#To begin creating an empty list and a counter 
-task_list = {}
-task_squence = 100
-
-#Loop for start menu
-while True:
-
-    print("Task Manager System\n")
-
-    print("Please choose one of the actions below.\n")
-
-    print("1. Add a new task")
-    print("2. Complete a task")
-    print("3. Delete a task")
-    print("4. List completed tasks")
-    print("5. List all tasks with their status")
-    print("6. Exit\n")
-
-    choice = input("Please enter the action number you would like to take: ")
-    
-    
-    if choice == '1':
-        #Add a new task
-        task_squence += 1
-        task_name = input("Please enter a name for the task: ")
-        task_list[task_squence] = {'name' : task_name, 'status' : 'Incomplete'} 
-        print(f"\nThe new task named {task_name} is listed with {task_squence} task ID.\n")
-
-
-    elif choice == '2':
-        #Complete a task
-        task_id = int(input("Please enter the task ID: "))
-
+def complete_task(task_list):
+    """
+    Bir görevi tamamlanmış olarak işaretler.
+    """
+    try:
+        task_id = int(input("Lütfen görev ID'sini girin: "))
         if task_id in task_list:
-            task_list[task_id]['status'] = 'Completed'
-
-            print(f"\nThe task {task_id} is completed.\n")
+            task_list[task_id]['status'] = 'Tamamlandı'
+            print(f"\nGörev {task_id} tamamlandı.\n")
         else:
-            print("\nTask ID not found.\n")
-        
+            print("\nGörev ID bulunamadı.\n")
+    except ValueError:
+        print("\nGeçersiz giriş. Lütfen bir sayı girin.\n")
 
-
-    elif choice == '3':
-        #Delete a task
-
-        task_id = int(input("Please enter a task ID to be deleted: "))
+def delete_task(task_list):
+    """
+    Bir görevi siler.
+    """
+    try:
+        task_id = int(input("Lütfen silinecek görev ID'sini girin: "))
         if task_id in task_list:
-            del task_list[task_squence]
+            del task_list[task_id]
+            print(f"Görev {task_id} silindi.\n")
+        else:
+            print("\nGörev ID bulunamadı.\n")
+    except ValueError:
+        print("\nGeçersiz giriş. Lütfen bir sayı girin.\n")
 
-        print(f"The task {task_id} is deleted.\n")
+def list_completed_tasks(task_list):
+    """
+    Tamamlanmış görevleri listeler.
+    """
+    print("Tamamlanmış Görevler:")
+    completed = False
+    for task_id, task in task_list.items():
+        if task['status'] == 'Tamamlandı':
+            print(f"ID: {task_id}, İsim: {task['name']}")
+            completed = True
+    if not completed:
+        print("Tamamlanmış görev bulunamadı.\n")
 
-    elif choice == '4':
-        # List completed tasks
-        print("Completed Tasks:")
-        for task_id, task in task_list.items():
-            if task['status'] == 'Completed':
-                print(f"ID: {task_id}, Name: {task['name']}")
-        if not any(task['status'] == 'Completed' for task in task_list.values()):
-            print("No completed tasks found.\n")
-           
-           
-
-        
-
-    elif choice == '5':
-        #List all tasks with their status
-        for task_id, task in task_list.items():
-           
-            print(f"ID: {task_id}, Name: {task['name']}, Status: {task['status']}\n")
-
-
-        print("The tasks and their status are listed.\n")
-
-    elif choice == '6':
-        print("Exiting the task manager system. Goodbye!")
-        break
+def list_all_tasks(task_list):
+    """
+    Tüm görevleri durumlarıyla birlikte listeler.
+    """
+    print("Tüm Görevler ve Durumları:")
+    if not task_list:
+        print("Görev listesi boş.\n")
     else:
-        print("Invalid choice. Please try again!")
+        for task_id, task in task_list.items():
+            print(f"ID: {task_id}, İsim: {task['name']}, Durum: {task['status']}")
+        print("Görevlerin durumları listelendi.\n")
+
+def main():
+    task_list = {}
+    task_sequence = 100
+
+    while True:
+        print("Görev Yönetim Sistemi\n")
+        print("Lütfen aşağıdaki işlemlerden birini seçin.\n")
+        print("1. Yeni bir görev ekle")
+        print("2. Bir görevi tamamla")
+        print("3. Bir görevi sil")
+        print("4. Tamamlanmış görevleri listele")
+        print("5. Tüm görevleri durumlarıyla listele")
+        print("6. Çıkış\n")
+
+        choice = input("Yapmak istediğiniz işlem numarasını girin: ")
+
+        if choice == '1':
+            task_sequence = add_task(task_list, task_sequence)
+        elif choice == '2':
+            complete_task(task_list)
+        elif choice == '3':
+            delete_task(task_list)
+        elif choice == '4':
+            list_completed_tasks(task_list)
+        elif choice == '5':
+            list_all_tasks(task_list)
+        elif choice == '6':
+            print("Görev yönetim sisteminden çıkılıyor. Hoşça kalın!")
+            break
+        else:
+            print("Geçersiz seçim. Lütfen tekrar deneyin!")
+
+
+def add_task(task_list, task_sequence):
+    """
+    Yeni bir görev ekler.
+    """
+    task_sequence += 1
+    task_name = input("Lütfen görev için bir isim girin: ")
+    task_list[task_sequence] = {'name': task_name, 'status': 'Tamamlanmadı'}
+    print(f"\nYeni görev '{task_name}' {task_sequence} ID ile listeye eklendi.\n")
+    return task_sequence
+
+def complete_task(task_list):
+    """
+    Bir görevi tamamlanmış olarak işaretler.
+    """
+    try:
+        task_id = int(input("Lütfen görev ID'sini girin: "))
+        if task_id in task_list:
+            task_list[task_id]['status'] = 'Tamamlandı'
+            print(f"\nGörev {task_id} tamamlandı.\n")
+        else:
+            print("\nGörev ID bulunamadı.\n")
+    except ValueError:
+        print("\nGeçersiz giriş. Lütfen bir sayı girin.\n")
+
+def delete_task(task_list):
+    """
+    Bir görevi siler.
+    """
+    try:
+        task_id = int(input("Lütfen silinecek görev ID'sini girin: "))
+        if task_id in task_list:
+            del task_list[task_id]
+            print(f"Görev {task_id} silindi.\n")
+        else:
+            print("\nGörev ID bulunamadı.\n")
+    except ValueError:
+        print("\nGeçersiz giriş. Lütfen bir sayı girin.\n")
+
+def list_completed_tasks(task_list):
+    """
+    Tamamlanmış görevleri listeler.
+    """
+    print("Tamamlanmış Görevler:")
+    completed = False
+    for task_id, task in task_list.items():
+        if task['status'] == 'Tamamlandı':
+            print(f"ID: {task_id}, İsim: {task['name']}")
+            completed = True
+    if not completed:
+        print("Tamamlanmış görev bulunamadı.\n")
+
+def list_all_tasks(task_list):
+    """
+    Tüm görevleri durumlarıyla birlikte listeler.
+    """
+    print("Tüm Görevler ve Durumları:")
+    if not task_list:
+        print("Görev listesi boş.\n")
+    else:
+        for task_id, task in task_list.items():
+            print(f"ID: {task_id}, İsim: {task['name']}, Durum: {task['status']}")
+        print("Görevlerin durumları listelendi.\n")
+
+def main():
+    task_list = {}
+    task_sequence = 100
+
+    while True:
+        print("Görev Yönetim Sistemi\n")
+        print("Lütfen aşağıdaki işlemlerden birini seçin.\n")
+        print("1. Yeni bir görev ekle")
+        print("2. Bir görevi tamamla")
+        print("3. Bir görevi sil")
+        print("4. Tamamlanmış görevleri listele")
+        print("5. Tüm görevleri durumlarıyla listele")
+        print("6. Çıkış\n")
+
+        choice = input("Yapmak istediğiniz işlem numarasını girin: ")
+
+        if choice == '1':
+            task_sequence = add_task(task_list, task_sequence)
+        elif choice == '2':
+            complete_task(task_list)
+        elif choice == '3':
+            delete_task(task_list)
+        elif choice == '4':
+            list_completed_tasks(task_list)
+        elif choice == '5':
+            list_all_tasks(task_list)
+        elif choice == '6':
+            print("Görev yönetim sisteminden çıkılıyor. Hoşça kalın!")
+            break
+        else:
+            print("Geçersiz seçim. Lütfen tekrar deneyin!")
+
+if __name__ == "__main__":
+    main()
+
+
